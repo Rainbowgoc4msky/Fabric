@@ -1,0 +1,157 @@
+from abc import ABC, abstractmethod
+
+
+class Car(ABC):
+    @abstractmethod
+    def drive(self):
+        pass
+
+
+class Audi(Car):
+    def drive(self):
+        return "Driving Audi"
+
+
+class BMW(Car):
+    def drive(self):
+        return "Driving BMW"
+
+
+class CarFactory:
+    @staticmethod
+    def create_car(car_type: str) -> Car:
+        if car_type == 'Audi':
+            return Audi()
+        elif car_type == 'BMW':
+            return BMW()
+        else:
+            raise ValueError('Invalid car type')
+
+
+car1 = CarFactory.create_car('Audi')
+print(car1.drive())  # Driving Audi
+
+car2 = CarFactory.create_car('BMW')
+print(car2.drive())  # Driving BMW
+```
+
+Абстрактная фабрика:
+
+```python
+from abc import ABC, abstractmethod
+
+
+class Car(ABC):
+    @abstractmethod
+    def drive(self):
+        pass
+
+
+class Audi(Car):
+    def drive(self):
+        return "Driving Audi"
+
+
+class BMW(Car):
+    def drive(self):
+        return "Driving BMW"
+
+
+class ElectricCar(ABC):
+    @abstractmethod
+    def charge(self):
+        pass
+
+
+class AudiElectric(ElectricCar):
+    def charge(self):
+        return "Charging Audi"
+
+
+class BMWElectric(ElectricCar):
+    def charge(self):
+        return "Charging BMW"
+
+
+class CarFactory(ABC):
+    @abstractmethod
+    def create_car(self) -> Car:
+        pass
+
+
+class AudiFactory(CarFactory):
+    def create_car(self) -> Car:
+        return Audi()
+
+    def create_electric_car(self) -> ElectricCar:
+        return AudiElectric()
+
+
+class BMWFactory(CarFactory):
+    def create_car(self) -> Car:
+        return BMW()
+
+    def create_electric_car(self) -> ElectricCar:
+        return BMWElectric()
+
+
+factory = AudiFactory()
+car1 = factory.create_car()
+print(car1.drive())  # Driving Audi
+
+electric_car1 = factory.create_electric_car()
+print(electric_car1.charge())  # Charging Audi
+
+factory = BMWFactory()
+car2 = factory.create_car()
+print(car2.drive())  # Driving BMW
+
+electric_car2 = factory.create_electric_car()
+print(electric_car2.charge())  # Charging BMW
+```
+
+Строитель:
+
+```python
+class Car:
+    def __init__(self):
+        self._model = None
+        self._engine = None
+        self._transmission = None
+
+    def __str__(self):
+        return f'Model: {self._model}\nEngine: {self._engine}\nTransmission: {self._transmission}'
+
+
+class CarBuilder:
+    def __init__(self):
+        self._car = Car()
+
+    def set_model(self, model):
+        self._car._model = model
+        return self
+
+    def set_engine(self, engine):
+        self._car._engine = engine
+        return self
+
+    def set_transmission(self, transmission):
+        self._car._transmission = transmission
+        return self
+
+    def build(self):
+        return self._car
+
+
+builder = CarBuilder()
+car1 = builder.set_model('Audi').set_engine('V8').set_transmission('Automatic').build()
+print(car1)
+# Model: Audi
+# Engine: V8
+# Transmission: Automatic
+
+car2 = builder.set_model('BMW').set_engine('V6').set_transmission('Manual').build()
+print(car2)
+# Model: BMW
+# Engine: V6
+# Transmission: Manual
